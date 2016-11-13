@@ -29,13 +29,28 @@ function GameOfLife(options) {
 }
 
 /**
+ * @function togglePlay
+ * @description Toggles play.
+ */
+GameOfLife.prototype.togglePlay = function() {
+  var returnValue = this._cycle === null;
+
+  // End an already existing cycle.
+  if (this._cycle)
+    this._killExistingCycle();
+  else
+    this._createNewCycle();
+
+  return returnValue;
+};
+
+/**
  * @function restart
  * @description Restarts the game.
  */
 GameOfLife.prototype.restart = function() {
   // End an already existing cycle.
-  if (this._cycle)
-    window.clearInterval(this._cycle);
+  this._killExistingCycle();
 
   // Generate a new model of the World with random population.
   this._model = this._generateModel({
@@ -45,45 +60,20 @@ GameOfLife.prototype.restart = function() {
   // Render the initial state of the World.
   this._render();
 
-  // Start a new cycle based on the `options.interval` setting.
-  this._cycle = window.setInterval(function() {
-    this._next();
-  }.bind(this), this._options.interval);
+  // Create a new cycle.
+  this._createNewCycle();
 };
 
 /**
- * @function _generateModel
- * @description Generates a new model of the World. Cells with `1` are alive, whilst cells with `0` are dead.
- * @param {object} args Arguments.
- * @param {-boolean} args.randomizePopulation Randomize population.
- */
-GameOfLife.prototype._generateModel = function(args) {
-  args = args || {};
-
-  var model = [];
-
-  for (var n = 0, nl = this._options.width; n < nl; ++n) {
-    var innerModel = [];
-
-    for (var k = 0, kl = this._options.height; k < kl; ++k)
-      innerModel.push(args.randomizePopulation ? Math.round(Math.round(Math.random() * 3) === 3 ? Math.random() * 1 : 0) : 0);
-
-    model.push(innerModel);
-  }
-
-  return model;
-};
-
-/**
- * @function _next
- * @description Moves forward in the cycle based on the following rules:
+ * @function nextGeneration
+ * @description Moves forward in the cycle of generations, based on the following rules:
  *      1. Any live cell with fewer than two live neighbours dies, as if caused by under-population.
  *      2. Any live cell with two or three live neighbours lives on to the next generation.
  *      3. Any live cell with more than three live neighbours dies, as if by over-population.
  *      4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
  * See `https://en.wikipedia.org/wiki/Conway's_Game_of_Life` for more details.
  */
-GameOfLife.prototype._next = function() {
+GameOfLife.prototype.nextGeneration = function() {
   // Generate a new model of the World without population.
   var newModel = this._generateModel();
 
@@ -141,6 +131,54 @@ GameOfLife.prototype._next = function() {
 
   // Render the current state of the World.
   this._render();
+};
+
+/**
+ * @function _createNewCycle
+ * @description Creates a new cycle.
+ */
+GameOfLife.prototype._createNewCycle = function(args) {
+  // Kill existing cycle.
+  this._killExistingCycle();
+
+  // Start a new cycle based on the `options.interval` setting.
+  this._cycle = window.setInterval(function() {
+    this.nextGeneration();
+  }.bind(this), this._options.interval);
+};
+
+/**
+ * @function _killExistingCycle
+ * @description Kills existing cycle.
+ */
+GameOfLife.prototype._killExistingCycle = function(args) {
+  if (this._cycle) {
+    window.clearInterval(this._cycle);
+    this._cycle = null;
+  }
+};
+
+/**
+ * @function _generateModel
+ * @description Generates a new model of the World. Cells with `1` are alive, whilst cells with `0` are dead.
+ * @param {object} args Arguments.
+ * @param {-boolean} args.randomizePopulation Randomize population.
+ */
+GameOfLife.prototype._generateModel = function(args) {
+  args = args || {};
+
+  var model = [];
+
+  for (var n = 0, nl = this._options.width; n < nl; ++n) {
+    var innerModel = [];
+
+    for (var k = 0, kl = this._options.height; k < kl; ++k)
+      innerModel.push(args.randomizePopulation ? Math.round(Math.round(Math.random() * 3) === 3 ? Math.random() * 1 : 0) : 0);
+
+    model.push(innerModel);
+  }
+
+  return model;
 };
 
 /**
