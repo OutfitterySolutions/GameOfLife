@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1" />
+		<meta name="author" content="Alex Hribsek" />
+		<meta name="title" content="Game of life" />
+
+		<link rel="stylesheet" type="text/css" href="index.css" />
+
+		<script src="index.js"></script>
+
+		<title>Game of life</title>
+	</head>
+	<body>
+		<h1>Game of life</h1>
+		<canvas id="world"></canvas>
+		<div id="toolbar">
+			<button id="restart">Restart</button>
+		</div>
+
+		<script type="text/javascript">
+			var gameOfLife;
+
+			document.addEventListener('DOMContentLoaded', function() {
+				gameOfLife = new GameOfLife();
+
+				document
+					.getElementById('restart')
+					.addEventListener('click', function() {
+						gameOfLife.restart();
+					});
+			});
+		</script>
+	</body>
+</html>

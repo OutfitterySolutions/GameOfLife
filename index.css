@@ -1,0 +1,14 @@
+﻿body {
+	margin: 2rem;
+	background: #eeeeee;
+	text-align: center;
+}
+
+h1 {
+	margin: 0 0 1rem 0;
+	font-size: 2rem;
+}
+
+#world {
+	margin-bottom: 1rem;
+}
