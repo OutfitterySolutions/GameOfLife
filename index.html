@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -16,20 +16,34 @@
 		<h1>Game of life</h1>
 		<canvas id="world"></canvas>
 		<div id="toolbar">
+			<button id="toggle_play">Toggle play</button>
+			<button id="next_generation" disabled>Next generation</button>
 			<button id="restart">Restart</button>
 		</div>
 
 		<script type="text/javascript">
-			var gameOfLife;
-
 			document.addEventListener('DOMContentLoaded', function() {
-				gameOfLife = new GameOfLife();
+				var togglePlayElement = document.getElementById('toggle_play'),
+					nextGenerationElement = document.getElementById('next_generation'),
+					restartElement = document.getElementById('restart');
 
-				document
-					.getElementById('restart')
-					.addEventListener('click', function() {
-						gameOfLife.restart();
-					});
+				var gameOfLife = new GameOfLife();
+
+				togglePlayElement.addEventListener('click', function() {
+					if (gameOfLife.togglePlay())
+						nextGenerationElement.setAttribute('disabled', 'disabled');
+					else
+						nextGenerationElement.removeAttribute('disabled');
+				});
+
+				nextGenerationElement.addEventListener('click', function() {
+					gameOfLife.nextGeneration();
+				});
+
+				restartElement.addEventListener('click', function() {
+					gameOfLife.restart();
+					nextGenerationElement.setAttribute('disabled', 'disabled');
+				});
 			});
 		</script>
 	</body>
