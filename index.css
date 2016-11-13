@@ -1,4 +1,4 @@
-﻿body {
+body {
 	margin: 2rem;
 	background: #eeeeee;
 	text-align: center;
@@ -11,4 +11,12 @@ h1 {
 
 #world {
 	margin-bottom: 1rem;
+}
+
+#toolbar button {
+	margin-right: 1rem;
+}
+
+#toolbar button:last-child {
+	margin-right: 0;
 }
